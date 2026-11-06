@@ -1,0 +1,219 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#263b32">
+<title>Mystery Miles - The Missing Mile Marker</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#eee9dc;color:#292d28;font-family:Arial,sans-serif}
+header{background:#263b32;color:white;text-align:center;padding:28px 18px}
+header .brand{letter-spacing:4px;font-size:12px;color:#d8bd83}
+header h1{font-family:Georgia,serif;font-size:34px;margin:12px 0 5px}
+header p{font-size:14px;color:#e3dfd3}
+main{max-width:620px;margin:auto;padding:20px}
+.card{background:#fffdf7;border-radius:18px;padding:23px;margin-bottom:18px;box-shadow:0 4px 16px #0000000c}
+.tag{font-size:11px;letter-spacing:2px;color:#947344;font-weight:bold}
+h2{font-family:Georgia,serif;color:#34493b}
+.story{line-height:1.7;font-size:16px}
+button{width:100%;padding:15px;border:0;border-radius:11px;background:#344d3d;color:white;font-size:16px;font-weight:bold;margin-top:10px;cursor:pointer}
+button.secondary{background:#e9e3d5;color:#344d3d}
+button:disabled{opacity:.5}
+.option{display:block;width:100%;text-align:left;background:#f0eee6;color:#30352f;border:2px solid transparent;margin:9px 0;padding:14px;border-radius:10px}
+.option.selected{border-color:#a47c42;background:#f8f0df}
+.progress{height:8px;background:#ddd8ca;border-radius:10px;overflow:hidden;margin:12px 0}
+.progress div{height:100%;background:#b48b4d;transition:width .3s}
+.small{font-size:13px;color:#777}
+.feedback{padding:14px;background:#eee9dc;border-radius:10px;line-height:1.6;margin-top:14px}
+footer{text-align:center;padding:20px;color:#777;font-size:12px}
+</style>
+</head>
+<body>
+<header>
+<div class="brand">MYSTERY MILES</div>
+<h1>The Missing Mile Marker</h1>
+<p>An Australian outback adventure</p>
+</header>
+<main>
+<div class="card">
+<div class="tag">YOUR FAMILY ADVENTURE</div>
+<h2 id="heading">The journey begins...</h2>
+<p class="story" id="story">An old envelope has arrived. Inside is a mystery that has remained unsolved for almost 70 years. Are you ready to discover what happened to Elsie Wattle?</p>
+<button id="start" onclick="startGame()">Begin the mystery</button>
+</div>
+<div id="game" style="display:none">
+<div class="card">
+<div class="tag" id="chapterLabel">CHAPTER 1 OF 5</div>
+<div class="progress"><div id="bar" style="width:20%"></div></div>
+<h2 id="chapterTitle"></h2>
+<p class="story" id="chapterStory"></p>
+</div>
+<div class="card">
+<div class="tag">SOLVE THE CLUE</div>
+<h2 id="question"></h2>
+<div id="options"></div>
+<button onclick="checkAnswer()" id="submit">Submit answer</button>
+<button class="secondary" onclick="showHint()">Give me a hint</button>
+<div id="feedback" class="feedback" style="display:none"></div>
+<button id="next" style="display:none" onclick="nextChapter()">Unlock next chapter</button>
+</div>
+<div class="card">
+<div class="tag">YOUR DETECTIVE SCORE</div>
+<h2 id="score">0 points</h2>
+<p class="small">Earn 10 points for every mystery solved.</p>
+</div>
+</div>
+<div id="finish" class="card" style="display:none;text-align:center">
+<div class="tag">CASE CLOSED</div>
+<h2>Outback Mystery Solved!</h2>
+<p class="story">You discovered Elsie's secret. The missing marker was never about distance. It marked a place where travellers could find kindness, water, food and help.</p>
+<h2 id="finalScore"></h2>
+<p>Congratulations! Your family are official Outback Mystery Detectives.</p>
+<button onclick="resetGame()">Play again</button>
+</div>
+<div class="card small">
+<strong>How to play:</strong>
+<p>One passenger hosts the game and reads clues aloud. Everyone can discuss answers together. The driver must never use or interact with the phone.</p>
+<p>Play anywhere. No special stops or GPS required.</p>
+</div>
+</main>
+<footer> MYSTERY MILES · GAME 001 · THE AUSTRALIAN OUTBACK</footer>
+<script>
+const chapters=[
+{
+title:"The Old Envelope",
+story:"The envelope contains a note from Elsie: I travelled every road but never moved. I show you towns, rivers and mountains, but have no houses of my own. Find me and the first secret is yours.",
+question:"What is Elsie describing?",
+options:["A compass","A map","A train","A windmill"],
+answer:1,
+hint:"It shows you where places are, but it isn't a place itself.",
+bonus:"Everyone shares their favourite Australian road-trip destination."
+},
+{
+title:"The Silent Windmill",
+story:"A faded photograph shows an old windmill. On the back Elsie wrote: I turn without walking. I catch something you cannot hold, and I help bring life to dry country.",
+question:"What does the windmill catch?",
+options:["Sunshine","Rainbows","Wind","Dust"],
+answer:2,
+hint:"You can feel it on your face, but you cannot hold it.",
+bonus:"Name three things you might see on an Australian country property."
+},
+{
+title:"The Forgotten Water Tank",
+story:"Behind the photograph is another message: I have a mouth but never speak. I hold something precious, especially where the land is dry. What am I?",
+question:"What is Elsie describing?",
+options:["A mailbox","A water tank","A river","A cattle trough"],
+answer:1,
+hint:"It stores something every outback station needs.",
+bonus:"Name three things you'd take for a night on a remote outback property."
+},
+{
+title:"The Last Letter",
+story:"You discover another letter: I did not leave because I was lost. I left because the town needed a place where every traveller could find help. Look for the place where messages wait.",
+question:"Where should you look for the next clue?",
+options:["The railway station","The post office mailbox","The windmill","The school"],
+answer:1,
+hint:"It's where letters and messages are collected.",
+bonus:"Share a favourite memory of receiving a special letter or message."
+},
+{
+title:"The Missing Mile Marker",
+story:"At last, you discover a brass marker. Elsie's final message reads: The marker was never meant to show distance. It marked a place where travellers could meet, share water, food and help. I left it here so kindness would never be forgotten.",
+question:"What was the real purpose of Elsie's marker?",
+options:["To mark buried gold","To show the town boundary","To mark a place where travellers could find help","To show a railway route"],
+answer:2,
+hint:"Think about what Elsie wanted travellers to find.",
+bonus:"Everyone names one kind thing they could do for a traveller or someone starting a new journey."
+}
+];
+let current=0,score=0,selected=-1,solved=false;
+function save(){
+try{localStorage.setItem("mysteryMilesSave",JSON.stringify({current,score,solved}));}catch(e){}
+}
+function restore(){
+try{
+const s=JSON.parse(localStorage.getItem("mysteryMilesSave"));
+if(s&&Number.isInteger(s.current)&&s.current>=0&&s.current<5){
+current=s.current;score=s.score||0;solved=!!s.solved;
+document.getElementById("start").textContent="Continue your mystery";
+}
+}catch(e){}
+}
+function startGame(){
+document.getElementById("start").style.display="none";
+document.getElementById("game").style.display="block";
+showChapter();
+}
+function showChapter(){
+const c=chapters[current];
+document.getElementById("chapterLabel").textContent="CHAPTER "+(current+1)+" OF 5";
+document.getElementById("bar").style.width=((current+1)*20)+"%";
+document.getElementById("chapterTitle").textContent=c.title;
+document.getElementById("chapterStory").textContent=c.story;
+document.getElementById("question").textContent=c.question;
+document.getElementById("score").textContent=score+" points";
+document.getElementById("feedback").style.display="none";
+document.getElementById("next").style.display=solved?"block":"none";
+document.getElementById("submit").disabled=solved;
+selected=-1;
+const area=document.getElementById("options");
+area.innerHTML="";
+c.options.forEach((o,i)=>{
+const b=document.createElement("button");
+b.className="option";
+b.textContent=o;
+b.onclick=()=>{
+if(solved)return;
+selected=i;
+document.querySelectorAll(".option").forEach(x=>x.classList.remove("selected"));
+b.classList.add("selected");
+};
+area.appendChild(b);
+});
+if(solved){
+document.getElementById("feedback").style.display="block";
+document.getElementById("feedback").textContent="Correct! "+c.bonus;
+}
+}
+function checkAnswer(){
+if(selected<0){alert("Choose an answer first!");return;}
+if(selected===chapters[current].answer){
+if(!solved)score+=10;
+solved=true;
+document.getElementById("feedback").style.display="block";
+document.getElementById("feedback").textContent="Correct! You earned 10 points. Family challenge: "+chapters[current].bonus;
+document.getElementById("submit").disabled=true;
+document.getElementById("next").style.display="block";
+document.getElementById("score").textContent=score+" points";
+save();
+}else{
+document.getElementById("feedback").style.display="block";
+document.getElementById("feedback").textContent="Not quite! Try again or ask for a hint.";
+}
+}
+function showHint(){
+document.getElementById("feedback").style.display="block";
+document.getElementById("feedback").textContent="HINT: "+chapters[current].hint;
+}
+function nextChapter(){
+if(current===4){
+document.getElementById("game").style.display="none";
+document.getElementById("finish").style.display="block";
+document.getElementById("finalScore").textContent=score+" / 50 points";
+try{localStorage.removeItem("mysteryMilesSave");}catch(e){}
+return;
+}
+current++;solved=false;save();showChapter();
+}
+function resetGame(){
+current=0;score=0;solved=false;
+document.getElementById("finish").style.display="none";
+document.getElementById("game").style.display="block";
+showChapter();save();
+}
+restore();
+</script>
+</body>
+</html>
