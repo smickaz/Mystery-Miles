@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#192d25">
+<title>The Secret Outback Archive</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#eee7d8;color:#29372e;font-family:Georgia,serif}
+header{background:#1d3429;color:white;text-align:center;padding:30px 15px;border-bottom:4px solid #c5a36a}
+header small{letter-spacing:4px;color:#d9bd86}
+h1{font-size:32px;margin:12px 0}
+main{max-width:600px;margin:auto;padding:18px}
+.card{background:#fffdf7;border:1px solid #dfd3bd;border-radius:16px;padding:22px;margin:16px 0;box-shadow:0 5px 16px #0000000a}
+.tag{font:bold 10px Arial;letter-spacing:2px;color:#9b7946}
+h2{color:#294333}
+p{line-height:1.7}
+button{width:100%;padding:15px;border:0;border-radius:10px;background:#294333;color:white;font-weight:bold;font-size:15px;margin-top:10px}
+button.secondary{background:#eee6d6;color:#294333}
+input{width:100%;padding:15px;border:1px solid #bba982;border-radius:9px;font-size:19px;text-align:center;margin-top:12px}
+.hidden{display:none}
+.note{background:#f2ead9;padding:16px;border-left:4px solid #bd9859;border-radius:7px;line-height:1.8}
+</style>
+</head>
+<body>
+<header>
+<small>MYSTERY MILES · SECRET FILE 001</small>
+<h1>The Secret Outback Archive</h1>
+<p>An unopened secret from 1958</p>
+</header>
+<main>
+<section class="card" id="intro">
+<div class="tag">CONFIDENTIAL · ELSIE WATTLE</div>
+<h2>The locked archive</h2>
+<p>You have discovered a hidden archive containing Elsie's final letter. The box is secured with a three-digit combination.</p>
+<p>A note pinned to the lid reads:</p>
+<div class="note"><em>"Three little numbers guard my secret. Solve my riddles, and the past will speak."</em></div>
+<button onclick="show(1)">OPEN THE FIRST CLUE</button>
+</section>
+
+<section class="card hidden" id="clue1">
+<div class="tag">CLUE ONE</div>
+<h2>The old bicycle</h2>
+<p>Elsie writes:</p>
+<div class="note">"I rode through the dusty town on a bicycle. Count the wheels beneath me. That is your first number."</div>
+<p>How many wheels does a bicycle have?</p>
+<button onclick="correct(1)">Two</button>
+<button class="secondary" onclick="wrong()">Three</button>
+<button class="secondary" onclick="wrong()">Four</button>
+<p id="m1"></p>
+</section>
+
+<section class="card hidden" id="clue2">
+<div class="tag">CLUE TWO</div>
+<h2>The quiet weekend</h2>
+<p>Elsie's next note says:</p>
+<div class="note">"The post office was closed for the weekend. Count the days when its doors stayed shut."</div>
+<p>How many days are in a weekend?</p>
+<button onclick="correct(2)">Two</button>
+<button class="secondary" onclick="wrong()">Three</button>
+<button class="secondary" onclick="wrong()">Five</button>
+<p id="m2"></p>
+</section>
+
+<section class="card hidden" id="clue3">
+<div class="tag">CLUE THREE</div>
+<h2>The wooden stool</h2>
+<p>The final note reads:</p>
+<div class="note">"I sat beside the old water tank on a wooden stool. Count its legs to find my final number."</div>
+<p>How many legs does a traditional four-legged stool have?</p>
+<button onclick="correct(3)">Four</button>
+<button class="secondary" onclick="wrong()">Three</button>
+<button class="secondary" onclick="wrong()">Two</button>
+<p id="m3"></p>
+</section>
+
+<section class="card hidden" id="lock">
+<div class="tag">THE FINAL LOCK</div>
+<h2>Unlock Elsie's archive</h2>
+<p>You have collected three numbers. Enter them in the order you discovered them.</p>
+<input id="code" inputmode="numeric" maxlength="3" placeholder="Enter 3-digit code">
+<button onclick="unlock()">UNLOCK THE ARCHIVE</button>
+<p id="lockMessage"></p>
+</section>
+
+<section class="card hidden" id="reveal">
+<div class="tag">ARCHIVE OPENED · 1958</div>
+<h2>Elsie's final letter</h2>
+<div class="note">
+My dear traveller,<br><br>
+If you have found this letter, you have followed my trail well.<br><br>
+I never buried gold or jewels. What I left behind was something far more valuable.<br><br>
+During my years travelling the outback, I met people who were lost, thirsty, stranded and alone. I wanted a place where every traveller could find water, a warm meal and a helping hand.<br><br>
+So I helped build a travellers' rest stop. The missing mile marker was meant to guide people towards it.<br><br>
+Remember this: the greatest treasure is the kindness we leave behind.<br><br>
+With love,<br>
+Elsie Wattle
+</div>
+<h2>CASE CRACKED!</h2>
+<p>You have opened the Secret Outback Archive and discovered Elsie's true treasure.</p>
+<div class="tag">OFFICIAL MYSTERY MILES DETECTIVE</div>
+<button onclick="restart()">PLAY ARCHIVE AGAIN</button>
+<a href="index.html"><button class="secondary">RETURN TO MAIN GAME</button></a>
+</section>
+
+<div class="card">
+<div class="tag">DETECTIVE NOTEBOOK</div>
+<p id="progress">Clues discovered: 0 of 3</p>
+<p style="font-size:13px;color:#81745d">Take your time. Discuss each clue together. No timer, no rush.</p>
+</div>
+</main>
+<script>
+let found=[false,false,false];
+function show(n){
+document.getElementById("intro").classList.add("hidden");
+document.getElementById("clue"+n).classList.remove("hidden");
+}
+function correct(n){
+found[n-1]=true;
+document.getElementById("m"+n).textContent="Correct! Your next clue awaits.";
+document.getElementById("m"+n).style.color="#347248";
+document.getElementById("progress").textContent="Clues discovered: "+found.filter(Boolean).length+" of 3";
+setTimeout(()=>{
+document.getElementById("clue"+n).classList.add("hidden");
+if(n<3)show(n+1);
+else document.getElementById("lock").classList.remove("hidden");
+},1100);
+}
+function wrong(){
+alert("Not quite! Have another think. You can do it!");
+}
+function unlock(){
+if(document.getElementById("code").value.trim()==="223"){
+document.getElementById("lock").classList.add("hidden");
+document.getElementById("reveal").classList.remove("hidden");
+}else{
+document.getElementById("lockMessage").textContent="The lock hasn't opened. Check the three clues and try again.";
+}
+}
+function restart(){
+found=[false,false,false];
+document.getElementById("reveal").classList.add("hidden");
+document.getElementById("intro").classList.remove("hidden");
+document.getElementById("progress").textContent="Clues discovered: 0 of 3";
+document.getElementById("code").value="";
+[1,2,3].forEach(n=>document.getElementById("clue"+n).classList.add("hidden"));
+document.getElementById("lock").classList.add("hidden");
+}
+</script>
+</body>
+</html>
