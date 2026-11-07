@@ -76,12 +76,13 @@ footer{text-align:center;color:#85785f;font:11px Arial;letter-spacing:2px;paddin
 </div>
 <div class="card">
 <div class="eyebrow">YOUR NEXT CLUE</div>
+<p class="small" id="puzzleNumber">PUZZLE 1 OF 4</p>
 <h2 id="question"></h2>
 <div id="choices"></div>
 <button id="submit" onclick="check()">LOCK IN ANSWER</button>
 <button class="secondary" onclick="hint()">ASK FOR A HINT</button>
 <div id="message" class="notice hidden"></div>
-<button id="next" class="gold hidden" onclick="advance()">UNLOCK NEXT CHAPTER</button>
+<button id="next" class="gold hidden" onclick="advance()">UNLOCK NEXT CLUE</button>
 </div>
 <div class="card">
 <div class="eyebrow">FAMILY SIDE QUEST</div>
@@ -98,6 +99,7 @@ footer{text-align:center;color:#85785f;font:11px Arial;letter-spacing:2px;paddin
 <div class="badge">OUTBACK MYSTERY DETECTIVES</div>
 <h2 id="finalPoints"></h2>
 <p id="finalMessage"></p>
+<div class="notice"><strong>Elsie’s three-digit code</strong><p>Enter the number you uncovered from the five chapter clues.</p><input id="finalCode" inputmode="numeric" maxlength="3" placeholder="Three-digit code"><button onclick="revealLetter()">UNLOCK ELSIE’S LETTER</button><p id="letterMessage" class="hidden"></p></div>
 <button onclick="restart()">PLAY AGAIN</button>
 </section>
 
@@ -111,156 +113,44 @@ footer{text-align:center;color:#85785f;font:11px Arial;letter-spacing:2px;paddin
 
 <script>
 const chapters=[
-{
-label:"CHAPTER ONE · THE OLD ENVELOPE",
-title:"A message from Elsie",
-story:"The envelope contains a note: 'I travelled every road but never moved. I show you towns, rivers and mountains, but have no houses of my own. Find me and the first secret is yours.'",
-question:"What is Elsie describing?",
-options:["A compass","A map","A train","A windmill"],
-answer:1,
-hint:"It shows you where places are, but it isn't a place itself.",
-bonus:"Everyone shares their favourite Australian road-trip destination.",
-},
-{
-label:"CHAPTER TWO · THE SILENT WINDMILL",
-title:"The turning blades",
-story:"A faded photograph shows a windmill. On its back Elsie wrote: 'I turn without walking. I catch something you cannot hold, and help bring life to dry country.'",
-question:"What does the windmill catch?",
-options:["Sunshine","Rainbows","Wind","Dust"],
-answer:2,
-hint:"You can feel it on your face, but you cannot hold it.",
-bonus:"Name three things you might see on an Australian country property."
-},
-{
-label:"CHAPTER THREE · THE FORGOTTEN WATER TANK",
-title:"A precious supply",
-story:"Behind the photograph is a message: 'I have a mouth but never speak. I hold something precious, especially where the land is dry. What am I?'",
-question:"What is Elsie describing?",
-options:["A mailbox","A water tank","A river","A cattle trough"],
-answer:1,
-hint:"It stores something every outback station needs.",
-bonus:"Name three things you'd take for a night on a remote outback property."
-},
-{
-label:"CHAPTER FOUR · THE LAST LETTER",
-title:"Where messages wait",
-story:"You discover another letter: 'I did not leave because I was lost. I left because the town needed a place where every traveller could find help. Look for the place where messages wait.'",
-question:"Where should you look for the next clue?",
-options:["The railway station","The post office mailbox","The windmill","The school"],
-answer:1,
-hint:"It is where letters and messages are collected.",
-bonus:"Share a favourite memory of receiving a special letter or message."
-},
-{
-label:"CHAPTER FIVE · THE MISSING MILE MARKER",
-title:"Elsie's final secret",
-story:"At last, you discover a brass marker. Elsie's final message reads: 'The marker was never meant to show distance. It marked a place where travellers could meet, share water, food and help. I left it here so kindness would never be forgotten.'",
-question:"What was the real purpose of Elsie's marker?",
-options:["To mark buried gold","To show the town boundary","To mark a place where travellers could find help","To show a railway route"],
-answer:2,
-hint:"Think about what Elsie wanted travellers to find.",
-bonus:"Everyone names one kind thing they could do for someone starting a new journey."
-}
+{label:"CHAPTER ONE · THE OLD ENVELOPE",title:"A message from Elsie",story:"The envelope contains a note: 'I travelled every road but never moved. I show you towns, rivers and mountains, but have no houses of my own.' A second scrap says: 'Begin with what guides you, then look closer.'",bonus:"SIDE QUEST: Everyone names a place in Australia they'd love to explore and explains why. Agree on three things a careful traveller should always carry.",puzzles:[
+["What is Elsie describing?",["A compass","A map","A train","A windmill"],1,"It shows where places are, but isn't a place itself."],
+["On an old map, what does a legend explain?",["The weather forecast","The symbols used on the map","The age of the paper","The names of map makers"],1,"It helps you understand the little pictures and marks."],
+["Elsie writes: NORTH, EAST, SOUTH, WEST. What do these words describe?",["The four seasons","The four directions","Four nearby towns","Four river crossings"],1,"They help you work out which way to travel."],
+["A map scale says 1 cm represents 10 km. How far is 3 cm?",["13 km","20 km","30 km"," hundred km"],2,"Multiply the centimetres by ten. Your chapter number is 1." ]],digit:"4"},
+{label:"CHAPTER TWO · THE SILENT WINDMILL",title:"The turning blades",story:"A faded photograph shows a windmill on a lonely station. On its back Elsie wrote: 'I turn without walking. I catch something you cannot hold, and help bring life to dry country.' Four tiny marks are drawn beside the tower.",bonus:"SIDE QUEST: Imagine you are preparing a remote property for a long dry spell. As a team, name five ways to save or store water. Then invent a name for Elsie's old station.",puzzles:[
+["What does the windmill catch?",["Sunshine","Rainbows","Wind","Dust"],2,"You can feel it on your face, but cannot hold it."],
+["What is the main job of a traditional station windmill?",["Pump water","Make telephone calls","Measure rainfall","Chop firewood"],0,"It helps bring water up from underground."],
+["Which item would be most useful if the wind stopped and the pump needed attention?",["A spare tool kit","A party hat","A beach ball","A music box"],0,"Think practical repairs out in the bush."],
+["A windmill has 4 blades in Elsie's sketch. What number is written on this clue?",["2","3","4","5"],2,"Count the blades in the description. This chapter's digit is 7."]],digit:"7"},
+{label:"CHAPTER THREE · THE FORGOTTEN WATER TANK",title:"A precious supply",story:"Behind the photograph is a message: 'I have a mouth but never speak. I hold something precious, especially where the land is dry.' A rough drawing shows a tank, a gutter and a narrow pipe.",bonus:"SIDE QUEST: Plan a one-day trip where there may be no shops. Make a shared packing list with at least six useful supplies. Which three would be most important in hot weather?",puzzles:[
+["What is Elsie describing?",["A mailbox","A water tank","A river","A cattle trough"],1,"It stores something every outback station needs."],
+["What usually carries rainwater from a roof into a tank?",["Gutters and downpipes","A fence wire","A chimney","A clothesline"],0,"Look along the edge of a roof when it rains."],
+["Why should stored drinking water be kept clean and covered?",["To keep dust and pests out","To make it heavier","To change its colour","To keep it warm"],0,"A lid helps protect the water supply."],
+["Elsie draws 3 water drops beside the tank. How many drops are there?",["1","2","3","4"],2,"Count the drops. This chapter's digit is 2."]],digit:"2"},
+{label:"CHAPTER FOUR · THE LAST LETTER",title:"Where messages wait",story:"You discover another letter: 'I did not leave because I was lost. I left because the town needed a place where every traveller could find help. Look for the place where messages wait.' A postmark reads 1958.",bonus:"SIDE QUEST: Share a favourite memory of receiving a special letter, postcard or message. As a team, think of one way a small country town can help a stranger passing through.",puzzles:[
+["Where should you look for the next clue?",["The railway station","The post office mailbox","The windmill","The school"],1,"It is where letters and messages are collected."],
+["What does a postmark usually tell you?",["Where and when mail was processed","Who wrote the letter's story","How heavy the envelope is","What is inside the parcel"],0,"It often includes a place name and date."],
+["If a traveller is lost, which action is safest?",["Ask a trusted local or official for help","Walk onto a highway","Follow an unknown vehicle","Ignore all signs"],0,"Choose a safe, sensible way to get help."],
+["The postmark says 1958. Which century is that?",["18th","19th","20th","21st"],2,"The 1900s are the twentieth century. This chapter's digit is 9."]],digit:"9"},
+{label:"CHAPTER FIVE · THE MISSING MILE MARKER",title:"Elsie's final secret",story:"At last, you discover a brass marker. Elsie's final message reads: 'The marker was never meant to show distance. It marked a place where travellers could meet, share water, food and help. The digits you gathered will open my final letter.'",bonus:"FINAL FAMILY CHALLENGE: Everyone names one kind thing they could do for someone starting a new journey. Then decide on a team motto for the next adventure.",puzzles:[
+["What was the real purpose of Elsie's marker?",["To mark buried gold","To show the town boundary","To mark a place where travellers could find help","To show a railway route"],2,"Think about what Elsie wanted travellers to find."],
+["What would make a travellers' rest stop welcoming?",["Clean water and a safe place to rest","A locked gate","A confusing sign","A broken pump"],0,"Elsie wanted people to feel safe and cared for."],
+["Which value best describes Elsie's plan?",["Greed","Kindness","Secrecy","Competition"],1,"She wanted strangers to help one another."],
+["Put the first three chapter digits in order. What three-digit code do they make?",["472","479","742","927"],0,"Use the digits you collected in chapters one, two and three: 4, 7, 2."]],digit:""}
 ];
-let current=0,score=0,selected=-1,solved=false,team="";
+let current=0,puzzle=0,score=0,selected=-1,solved=false,team="";
 const $=id=>document.getElementById(id);
-function save(){
-try{localStorage.setItem("mmPremium",JSON.stringify({current,score,solved,team}));}catch(e){}
-}
-function restore(){
-try{
-let s=JSON.parse(localStorage.getItem("mmPremium"));
-if(s&&Number.isInteger(s.current)&&s.current>=0&&s.current<5){
-current=s.current;score=s.score||0;solved=!!s.solved;team=s.team||"";
-$("team").value=team;
-$("team").placeholder="Continue your adventure";
-$("welcome").querySelector("button").textContent="CONTINUE ADVENTURE";
-}
-}catch(e){}
-}
-function begin(){
-team=$("team").value.trim()||"The Mystery Team";
-$("teamName").textContent=team;
-$("welcome").classList.add("hidden");
-$("game").classList.remove("hidden");
-render();save();
-}
-function render(){
-let c=chapters[current];
-$("teamName").textContent=team;
-$("chapterLabel").textContent=c.label;
-$("chapterNumber").textContent=(current+1)+"/5";
-$("title").textContent=c.title;
-$("story").textContent=c.story;
-$("question").textContent=c.question;
-$("bonus").textContent=c.bonus;
-$("points").textContent=score;
-$("bar").style.width=((current+1)*20)+"%";
-$("medal").textContent=score>=40?"★★★":score>=20?"★★":"★";
-$("message").classList.add("hidden");
-$("next").classList.add("hidden");
-$("submit").disabled=solved;
-$("choices").innerHTML="";
-selected=-1;
-c.options.forEach((o,i)=>{
-let b=document.createElement("button");
-b.className="choice";b.textContent=o;
-b.onclick=()=>{
-if(solved)return;
-selected=i;
-document.querySelectorAll(".choice").forEach(x=>x.classList.remove("selected"));
-b.classList.add("selected");
-};
-$("choices").appendChild(b);
-});
-if(solved){
-$("message").textContent="Clue unlocked! "+c.bonus;
-$("message").classList.remove("hidden");
-$("next").classList.remove("hidden");
-}
-}
-function check(){
-if(selected<0){alert("Choose an answer first.");return;}
-if(selected===chapters[current].answer){
-if(!solved)score+=10;
-solved=true;
-$("points").textContent=score;
-$("medal").textContent=score>=40?"★★★":score>=20?"★★":"★";
-$("message").textContent="Correct! You earned 10 points. "+chapters[current].bonus;
-$("message").classList.remove("hidden");
-$("next").classList.remove("hidden");
-$("submit").disabled=true;
-save();
-}else{
-$("message").textContent="Not quite. Read the clue again or ask for a hint. Have another go!";
-$("message").classList.remove("hidden");
-}
-}
-function hint(){
-$("message").textContent="HINT: "+chapters[current].hint;
-$("message").classList.remove("hidden");
-}
-function advance(){
-if(current===4){
-$("game").classList.add("hidden");
-$("ending").classList.remove("hidden");
-$("finalPoints").textContent=score+" / 50 POINTS";
-$("finalMessage").textContent=score===50?"Perfect detective work, "+team+"!": "Well done, "+team+"! You solved Elsie's mystery.";
-try{localStorage.removeItem("mmPremium");}catch(e){}
-return;
-}
-current++;solved=false;render();save();
-window.scrollTo({top:0,behavior:"smooth"});
-}
-function restart(){
-current=0;score=0;solved=false;team="";
-try{localStorage.removeItem("mmPremium");}catch(e){}
-$("ending").classList.add("hidden");
-$("welcome").classList.remove("hidden");
-$("team").value="";
-$("welcome").querySelector("button").textContent="OPEN THE ENVELOPE";
-window.scrollTo({top:0,behavior:"smooth"});
-}
+const total=chapters.reduce((n,c)=>n+c.puzzles.length,0);
+function save(){try{localStorage.setItem("mmPremium",JSON.stringify({current,puzzle,score,solved,team}));}catch(e){}}
+function restore(){try{let s=JSON.parse(localStorage.getItem("mmPremium"));if(s&&Number.isInteger(s.current)&&s.current>=0&&s.current<5){current=s.current;puzzle=Math.min(s.puzzle||0,3);score=s.score||0;solved=!!s.solved;team=s.team||"";$("team").value=team;$ ("welcome").querySelector("button").textContent="CONTINUE ADVENTURE";}}catch(e){}}
+function begin(){team=$("team").value.trim()||"The Mystery Team";$("teamName").textContent=team;$("welcome").classList.add("hidden");$("game").classList.remove("hidden");render();save();}
+function render(){let c=chapters[current],q=c.puzzles[puzzle];$("teamName").textContent=team;$("chapterLabel").textContent=c.label;$("chapterNumber").textContent=(current+1)+"/5";$("title").textContent=c.title;$("story").textContent=c.story;$("puzzleNumber").textContent="PUZZLE "+(puzzle+1)+" OF 4 · "+(current*4+puzzle+1)+" OF "+total;$("question").textContent=q[0];$("bonus").textContent=c.bonus;$("points").textContent=score;$("bar").style.width=((current*4+puzzle+1)/total*100)+"%";$("medal").textContent=score>=160?"★★★":score>=90?"★★":"★";$("message").classList.add("hidden");$("next").classList.add("hidden");$("submit").disabled=solved;$("choices").innerHTML="";selected=-1;q[1].forEach((o,i)=>{let b=document.createElement("button");b.className="choice";b.textContent=o;b.onclick=()=>{if(solved)return;selected=i;document.querySelectorAll(".choice").forEach(x=>x.classList.remove("selected"));b.classList.add("selected");};$("choices").appendChild(b);});if(solved){$("message").textContent="Correct! Clue unlocked. "+(puzzle===3?"Chapter complete! ":"")+"Take a moment for the family side quest below.";$("message").classList.remove("hidden");$("next").textContent=puzzle===3?(current===4?"FINISH THE MYSTERY":"UNLOCK NEXT CHAPTER"):"UNLOCK NEXT PUZZLE";$("next").classList.remove("hidden");}}
+function check(){if(selected<0){alert("Choose an answer first.");return;}let q=chapters[current].puzzles[puzzle];if(selected===q[2]){if(!solved)score+=10;solved=true;$("points").textContent=score;$("message").textContent="Correct! You earned 10 points. "+q[3];$("message").classList.remove("hidden");$("next").textContent=puzzle===3?(current===4?"FINISH THE MYSTERY":"UNLOCK NEXT CHAPTER"):"UNLOCK NEXT PUZZLE";$("next").classList.remove("hidden");$("submit").disabled=true;save();}else{$("message").textContent="Not quite. Read the clue again or ask for a hint. Have another go!";$("message").classList.remove("hidden");}}
+function hint(){$("message").textContent="HINT: "+chapters[current].puzzles[puzzle][3];$("message").classList.remove("hidden");}
+function advance(){if(puzzle<3){puzzle++;solved=false;}else if(current<4){current++;puzzle=0;solved=false;}else{$("game").classList.add("hidden");$("ending").classList.remove("hidden");$("finalPoints").textContent=score+" / "+(total*10)+" POINTS";$("finalMessage").textContent="Well done, "+team+"! You have followed every clue and uncovered Elsie's story. Now enter the three-digit clue sequence to read her letter.";return;}render();save();window.scrollTo({top:0,behavior:"smooth"});}
+function revealLetter(){let v=$("finalCode").value.trim();if(v==="472"){$("letterMessage").textContent="Dear traveller, if you have found this, you have understood my secret. A road is more than a way to get somewhere. It is the people who stop to help, share what they have and make a stranger feel welcome. Keep a little kindness in your kit, and leave every place better than you found it. With warm wishes, Elsie Wattle · 1958";}else{$("letterMessage").textContent="That isn't quite right. Look back at the four chapter digits and put them in order.";}$("letterMessage").classList.remove("hidden");}
+function restart(){current=0;puzzle=0;score=0;solved=false;team="";try{localStorage.removeItem("mmPremium");}catch(e){}$("ending").classList.add("hidden");$("welcome").classList.remove("hidden");$("team").value="";$("welcome").querySelector("button").textContent="OPEN THE ENVELOPE";window.scrollTo({top:0,behavior:"smooth"});}
 restore();
 </script>
 </body>
